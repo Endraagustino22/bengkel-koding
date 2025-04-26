@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('id_pasien')->constrained('users','id');
             $table->foreignId('id_dokter')->constrained('users','id');
             $table->datetime('tgl_periksa')->nullable();
-            $table->text('catatan');
-            $table->float('biaya_periksa');
+            $table->text('catatan')->nullable();
+            $table->float('biaya_periksa')->nullable();
+            $table->enum('status', ['sudah diperiksa', 'belum diperiksa'])->default('belum diperiksa');
             $table->timestamps();
         });
     }
