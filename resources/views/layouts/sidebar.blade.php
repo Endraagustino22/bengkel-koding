@@ -1,73 +1,58 @@
-<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-  <!-- Add icons to the links using the .nav-icon class
-       with font-awesome or any other icon font library -->
-  @if (Auth::user()->role == 'dokter')
+<ul class="nav nav-pills nav-sidebar flex-column fixed top-0 left-0 h-screen w-64 overflow-y-auto bg-gray-800 text-white">
 
-  <li class="nav-item">
-    <a href="{{route('dokter.index')}}" class="nav-link">
-      <i class="nav-icon fas fa-tachometer-alt"></i>
-      <p>
-        Dokter
-        <i class="right fas fa-angle-left"></i>
-      </p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="{{route('obat.index')}}" class="nav-link">
-      <i class="nav-icon fas fa-th"></i>
-      <p>
-        Obat
-        <span class="right badge badge-danger">New</span>
-      </p>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-copy"></i>
-      <p>
-        Pemeriksaan
-        <i class="fas fa-angle-left right"></i>
-        <span class="badge badge-info right">6</span>
-      </p>
-    </a>
+  {{-- navbar dokter --}}
+  @if (Auth::user()->role == 'dokter')
+    <li class="nav-item">
+      <a href="{{route('dokter.index')}}" class="nav-link">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>
+          Dahboard
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{route('obat.index')}}" class="nav-link">
+        <i class="nav-icon fas fa-th"></i>
+        <p>
+          Obat
+        </p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{{ route('dokter.periksa') }}" class="nav-link">
+        <i class="nav-icon fas fa-copy"></i>
+        <p>
+          Pemeriksaan
+          <i class="fas fa-angle-left right"></i>
+        </p>
+      </a>
+    </li>
+     
+
+
+  {{-- Navbar Pasien --}}
   @elseif (Auth::user()->role == 'pasien')
   <li class="nav-item">
-    <a href="#" class="nav-link">
-      <i class="nav-icon fas fa-chart-pie"></i>
-      <p>
-        Pemeriksaan
-        <i class="right fas fa-angle-left"></i>
+    <a href="{{ route('pasien.index') }}" style="{{ request()->routeIs('pasien.index') ? 'background-color: #3b82f6; color: white !important' : '' }}" class="nav-link bg-blue-500 {{ request()->routeIs('pasien.index') ? 'bg-blue-500 text-amber-400' : '' }}">
+        <i class="nav-icon fas fa-home"></i>
+        <p>
+            Dashboard
+        </p>
+    </a>
+</li>
+
+  <li class="nav-item" style="{{ request()->routeIs('pasien.create') ? 'background-color: #3b82f6;' : '' }}">
+    <a href="{{ route('pasien.create') }}" class="nav-link">
+      <i class="nav-icon fas fa-chart-pie" style="color: white"></i>
+      <p style="color: white">
+        Periksa
       </p>
     </a>
-    <ul class="nav nav-treeview">
-      <li class="nav-item">
-        <a href="../charts/chartjs.html" class="nav-link">
-          <i class="far fa-circle nav-icon"></i>
-          <p>ChartJS</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="../charts/flot.html" class="nav-link">
-          <i class="far fa-circle nav-icon"></i>
-          <p>Flot</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="../charts/inline.html" class="nav-link">
-          <i class="far fa-circle nav-icon"></i>
-          <p>Inline</p>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="../charts/uplot.html" class="nav-link">
-          <i class="far fa-circle nav-icon"></i>
-          <p>uPlot</p>
-        </a>
-      </li>
-    </ul>
   </li>
   @endif
-  <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-      @csrf
-      <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-  </form>
+  <form action="{{ route('logout') }}" method="POST" class="mx-auto mt-4">
+    @csrf
+    <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+</form>
+

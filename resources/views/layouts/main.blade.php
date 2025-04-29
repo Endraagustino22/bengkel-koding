@@ -11,8 +11,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
     @include('layouts.lib.ext-css')
+    @vite('resources/css/app.css')
+
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini relative min-h-screen">
 <!-- Site wrapper -->
 <div class="wrapper">
   <!-- Navbar -->

@@ -35,7 +35,7 @@ class AuthController extends Controller
             // Arahkan berdasarkan role
             $user = Auth::user();
             if ($user->role === 'dokter') {
-                return redirect()->intended('/obat');
+                return redirect()->intended('/dokter');
             } elseif ($user->role === 'pasien') {
                 return redirect()->intended('/pasien');
             }
@@ -81,5 +81,4 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
-
 }
