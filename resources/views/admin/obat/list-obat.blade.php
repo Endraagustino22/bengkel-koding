@@ -6,6 +6,7 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1>Obat</h1>
+        <a href="{{ route('obat.create') }}" class="mx-3 my-4 btn btn-primary">Tambah Obat</a>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">

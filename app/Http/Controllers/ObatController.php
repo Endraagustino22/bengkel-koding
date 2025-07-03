@@ -9,7 +9,7 @@ class ObatController extends Controller
 {
     public function index(){
         $obats = Obat::all();
-        return view('list-obat', compact('obats'));
+        return view('admin.obat.list-obat', compact('obats'));
     }
 
     public function store(Request $request)
@@ -31,14 +31,14 @@ class ObatController extends Controller
 
     public function create()
     {
-        return view('dokter.add-obat');
+        return view('admin.obat.add-obat');
     }
 
     public function edit($id)
-{
-    $obat = Obat::findOrFail($id);
-    return view('dokter.edit-obat', compact('obat'));
-}
+    {
+        $obat = Obat::findOrFail($id);
+        return view('admin.obat.edit-obat', compact('obat'));
+    }
 
     public function update(Request $request, $id)
     {
@@ -57,6 +57,7 @@ class ObatController extends Controller
 
         return redirect()->route('obat.index')->with('success', 'Data obat berhasil diperbarui!');
     }
+    
     public function destroy($id)
     {
         try {

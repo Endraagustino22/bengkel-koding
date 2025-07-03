@@ -1,56 +1,52 @@
 @extends('layouts.main')
+
 @section('content')
-    <div class="max-w-3xl mx-auto p-6">
-        <!-- Data Periksa Sebagai Dokter -->
-        <div>
-            <h2 class="text-xl font-semibold mb-4">Periksa sebagai Dokter</h2>
-            @if($user->dokter->isEmpty())
-                <p class="text-gray-500">Belum ada data periksa sebagai dokter.</p>
-            @else
-                <table class="table-auto w-full bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead class="bg-blue-500 text-white">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-2xl font-bold text-blue-700 mb-6">Daftar Periksa</h1>
+
+        {{-- Daftar Pasien yang periksa --}}
+        @if ($daftarPoli->isEmpty())
+            <p class="text-gray-500">Belum ada pasien yang mendaftar.</p>
+        @else
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto border text-sm">
+                    <thead class="bg-blue-100 text-gray-700">
                         <tr>
-                            <th class="px-4 py-2 text-left">Tanggal Periksa</th>
-                            <th class="px-4 py-2 text-left">Catatan</th>
-                            <th class="px-4 py-2 text-left">Status</th>
-                            <th class="px-4 py-2 text-left">Biaya Periksa</th>
-                            <th class="px-4 py-2 text-left">Action</th>
+                            <th class="border px-3 py-2">Antrian</th>
+                            <th class="border px-3 py-2">Nama Pasien</th>
+                            <th class="border px-3 py-2">Keluhan</th>
+                            <th class="border px-3 py-2">Hari</th>
+                            <th class="border px-3 py-2">Jam</th>
+                            <th class="border px-3 py-2">Status</th>
+                            <th class="border px-3 py-2">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y">
-                        @foreach($user->dokter as $periksa)
+                    <tbody>
+                        @foreach ($daftarPoli as $dp)
                             <tr>
-                                <td class="px-4 py-2">{{ $periksa->tgl_periksa ?? 'Null' }}</td>
-                                <td class="px-4 py-2">{{ $periksa->catatan }}</td>
-                                <td class="px-4 py-2 whitespace-nowrap">
-                                    <span class="px-2 py-1 rounded {{ $periksa->status == 'belum diperiksa' ? 'bg-red-500 text-white' : 'bg-green-500 text-white' }}">
-                                        {{ $periksa->status }}
+                                <td class="border px-3 py-2 text-center">{{ $dp->no_antrian }}</td>
+                                <td class="border px-3 py-2">{{ $dp->nama_pasien }}</td>
+                                <td class="border px-3 py-2">{{ $dp->keluhan }}</td>
+                                <td class="border px-3 py-2">{{ $dp->hari }}</td>
+                                <td class="border px-3 py-2">
+                                    {{ \Carbon\Carbon::parse($dp->jam_mulai)->format('H:i') }} -
+                                    {{ \Carbon\Carbon::parse($dp->jam_selesai)->format('H:i') }}
+                                </td>
+                                <td class="border px-3 py-2 text-center">
+                                    <span>
+                                        {{ $dp->status }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-2">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</td>
-
-                                {{-- belum periksa --}}
-                                @if($periksa->status == 'belum diperiksa')
-                                <td class="px-4 py-2 whitespace-nowrap">
-                                    <span class="bg-blue-400 px-2 py-1 rounded">
-                                        <a href="{{route('dokter.form-periksa', $periksa->id)}}" class="text-white no-underline">periksa<i class="fa fa-stethoscope ml-2"></i></a>
+                                <td class="border px-3 py-2 text-center">
+                                    <span class="px-2 py-1 text-xs rounded bg-orange-400">
+                                        <a href="{{ route('dokter.form-periksa', $dp->id) }}" class="text-white">Periksa</a>
                                     </span>
-                                </td>   
-                                
-                                {{-- sudah periksa --}}
-                                @else
-                                    <td class="px-4 py-2 whitespace-nowrap">
-                                        <span class="bg-blue-400 px-2 py-1 rounded">
-                                            <a href="{{ route('dokter.edit-periksa', $periksa->id) }}" class="text-white no-underline">Edit <i class="fa fa-edit"></i></a>
-                                        </span>
-                                    </td>
-                                @endif
-
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 @endsection

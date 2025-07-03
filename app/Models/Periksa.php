@@ -3,27 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Periksa extends Model
 {
+    use HasFactory;
+
+    protected $table = 'periksa';
+
     protected $fillable = [
-        'id_pasien',
-        'id_dokter',
+        'id_daftar_poli',
         'tgl_periksa',
         'catatan',
         'biaya_periksa',
-        'status',
     ];
 
-    public function dokter(): BelongsTo{
-        return $this->belongsTo(User::class, 'id_dokter');
+    public function daftarPoli()
+    {
+        return $this->belongsTo(DaftarPoli::class, 'id_daftar_poli');
     }
 
-    public function pasien(): BelongsTo{
-        return $this->belongsTo(User::class, 'id_pasien');
-    }   
+    public function detailPeriksa()
+    {
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa');
+    }
 
-    
 }

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Periksa;
+use Illuminate\Support\Facades\DB;
 
 class PeriksaSeeder extends Seeder
 {
@@ -13,28 +13,24 @@ class PeriksaSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
-            [
-                'id_pasien' => 3,
-                'id_dokter' => 1,
-                'catatan' => 'periksa pertama',
-                'biaya_periksa' => 50000,
-            ],
-            [
-                'id_pasien' => 4,
-                'id_dokter' => 2,
-                'catatan' => 'periksa pertama Lagi',
-                'biaya_periksa' => 60000,
-            ],
-        ];
+        DB::table('periksa')->insert([
+        [
+            'id_daftar_poli' => 1,
+            'tgl_periksa'    => '2025-06-01 09:00:00',
+            'catatan'        => 'Pasien keluhan demam tinggi dan sakit kepala.',
+            'biaya_periksa'  => 50000,
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ],
+        [
+            'id_daftar_poli' => 2,
+            'tgl_periksa'    => '2025-06-02 10:30:00',
+            'catatan'        => 'Pasien mengalami batuk dan pilek.',
+            'biaya_periksa'  => 40000,
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ],
+    ]);
 
-        foreach($data as $d){
-            Periksa::create([
-                'id_pasien' => $d['id_pasien'],
-                'id_dokter' => $d['id_dokter'],
-                'catatan' => $d['catatan'],
-                'biaya_periksa' => $d['biaya_periksa'],
-            ]);
-        }
     }
 }

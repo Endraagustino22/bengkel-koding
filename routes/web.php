@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\JadwalPeriksaController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\DokterProfileController;
+use App\Http\Controllers\PasienProfileController;
 
 // authentication routes
 Route::get('/', [AuthController::class, 'form']);
@@ -21,20 +25,29 @@ Route::middleware(['auth', 'role:dokter'])->group(function () {
     Route::get('/dokter/periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
     Route::get('/dokter/edit-periksa/{id}', [DokterController::class, 'editPeriksa'])->name('dokter.edit-periksa');
     Route::put('/dokter/update-periksa/{id}', [DokterController::class, 'updatePeriksa'])->name('dokter.update-periksa');
-    Route::get('/dokter/form-periksa/{id}', [DokterController::class, 'formPeriksa'])->name('dokter.form-periksa');
-    Route::post('/dokter/periksa-store/{id}', [DokterController::class, 'periksaStore'])->name('dokter.periksa-store');
-    Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
-    Route::get('/obat/{id}/edit', [ObatController::class, 'edit'])->name('obat.edit');
-    Route::put('/obat/{id}', [ObatController::class, 'update'])->name('obat.update');
-    Route::post('/obat', [ObatController::class, 'store'])->name('obat.store');
-    Route::get('/obat/create', [ObatController::class, 'create'])->name('obat.create');
-    Route::delete('/obat/{id}', [ObatController::class, 'destroy'])->name('obat.destroy');
+    Route::get('/form-periksa/{id}', [DokterController::class, 'formPeriksa'])->name('dokter.form-periksa');
+    Route::post('/periksa-store/{id}', [DokterController::class, 'periksaStore'])->name('dokter.periksa-store');
+    Route::get('/riwayat-pasien', [DokterController::class, 'riwayatPasien'])->name('dokter.riwayat-pasien');
+    Route::get('/jadwal-periksa', [JadwalPeriksaController::class, 'index'])->name('dokter.jadwal-periksa');
+    Route::get('/dokter/edit-profile', [DokterController::class, 'editProfile'])->name('dokter.edit-profile');
+    Route::put('/dokter/update-profile', [DokterController::class, 'updateProfile'])->name('dokter.update-profile');
+    Route::resource('jadwal', JadwalPeriksaController::class)->middleware(['auth', 'role:dokter']);
 });
 
 Route::middleware(['auth', 'role:pasien'])->group(function () {
     // routes for pasien
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
-    Route::get('/pasien/create', [PasienController::class, 'create'])->name('pasien.create');
-    Route::post('/pasien', [PasienController::class, 'store'])->name('pasien.store');
+    Route::get('/pasien/daftar-poli', [PasienController::class, 'showDaftarPoliForm'])->name('pasien.daftar_poli.form');
+    Route::post('/pasien/daftar-poli', [PasienController::class, 'storeDaftarPoli'])->name('pasien.daftar_poli.store');
 });
-    
+
+// jadwal periksa routes
+
+// admin routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::resource('dokter-profiles', DokterProfileController::class);
+    Route::resource('pasien-profiles', PasienProfileController::class);
+    Route::resource('poli', \App\Http\Controllers\PoliController::class);
+    Route::resource('obat', ObatController::class);
+});

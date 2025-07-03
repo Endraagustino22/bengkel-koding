@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -14,12 +15,12 @@ class AuthController extends Controller
 
     public function form()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     public function formRegister()
     {
-        return view('register');
+        return view('auth.register');
     }
 
     public function authenticate(Request $request): RedirectResponse
@@ -38,6 +39,10 @@ class AuthController extends Controller
                 return redirect()->intended('/dokter');
             } elseif ($user->role === 'pasien') {
                 return redirect()->intended('/pasien');
+            } elseif ($user->role === 'pasien') {
+                return redirect()->intended('/pasien');
+            } elseif ($user->role === 'admin') {
+                return redirect()->intended('/admin');
             }
 
             // Default fallback
@@ -57,20 +62,35 @@ class AuthController extends Controller
             'alamat' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6', // tambahkan konfirmasi jika ingin pakai
+            'password' => 'required|string|min:6',
+            'no_hp' => 'required|string|max:20',
+            'no_ktp' => 'required|string|max:20',
+            'alamat' => 'required|string|max:255',
         ]);
 
         $user = User::create([
             'nama' => $request->nama,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'no_hp' => $request->no_hp,
             'role' => 'pasien', // default role
+            'alamat' => $request->alamat,
+        ]);
+
+         // generate no_rm
+         $no_rm = now()->format('Ym') . '-' . $user->id;
+
+        $pasien = Pasien::create([
+            'nama' => $request->nama,
+            'id_user' => $user->id,
+            'alamat' => $request->alamat,
+            'no_ktp' => $request->no_ktp,
+            'no_hp' => $request->no_hp,
+            'no_rm' => $no_rm
         ]);
 
 
-        return redirect()->route('login'); // ubah ke route yang kamu tuju setelah login
+        return redirect()->route('login');
     }
 
 

@@ -1,64 +1,72 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="max-w-6xl mx-auto py-8 px-4">
-    <h2 class="text-2xl font-semibold mb-6">Dashboard Pasien</h2>
 
-    {{-- Informasi Pasien --}}
-    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h3 class="text-xl font-bold mb-2">{{ $user->nama }}</h3>
-        <p class="text-gray-700">
-            <strong>Email:</strong> {{ $user->email }}<br>
-            <strong>No HP:</strong> {{ $user->no_hp }}<br>
-            <strong>Alamat:</strong> {{ $user->alamat }}
-        </p>
+@if (session('success'))
+    <div class="mb-4 p-4 rounded-md bg-green-100 border border-green-300 text-green-800">
+        {{ session('success') }}
+    </div>
+@endif
+
+<div class="container mx-auto p-6 bg-white shadow-md rounded-lg px-5">
+    <h1 class="text-xl font-bold mb-4 text-blue-600">Dashboard Pasien</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 border rounded-lg bg-blue-50">
+            <p class="text-gray-600">Nama</p>
+            <p class="font-semibold">{{ $pasien->nama }}</p>
+        </div>
+        <div class="p-4 border rounded-lg bg-blue-50">
+            <p class="text-gray-600">No. Rekam Medis (RM)</p>
+            <p class="font-semibold">{{ $pasien->no_rm }}</p>
+        </div>
+        <div class="p-4 border rounded-lg bg-blue-50">
+            <p class="text-gray-600">No. HP</p>
+            <p class="font-semibold">{{ $pasien->no_hp }}</p>
+        </div>
+        <div class="p-4 border rounded-lg bg-blue-50">
+            <p class="text-gray-600">Alamat</p>
+            <p class="font-semibold">{{ $pasien->alamat }}</p>
+        </div>
     </div>
 
-    {{-- Statistik Pemeriksaan --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div class="bg-green-500 text-white rounded-lg shadow-md p-6 text-center">
-            <h4 class="text-lg font-semibold mb-2">Total Pemeriksaan</h4>
-            <p class="text-5xl font-bold">{{ $jumlahPeriksa }}</p>
-        </div>
-        <div class="bg-green-100 text-green-800 rounded-lg shadow-md p-6 text-center">
-            <h4 class="text-lg font-semibold mb-2">Total Biaya</h4>
-            <p class="text-3xl font-bold">Rp{{ number_format($totalBiaya, 0, ',', '.') }}</p>
-        </div>
+    <div class="mt-6">
+        <h1 class="text-xl font-bold mb-4 text-blue-600">Riwayat Pariksa</h1>
+        @if($riwayat->isEmpty())
+        <p class="text-gray-500">Belum ada riwayat periksa.</p>
+        @else
+            <table class="w-full table-auto border">
+                <thead>
+                    <tr class="bg-blue-100 text-left">
+                        <th class="p-2 border">Tanggal Periksa</th>
+                        <th class="p-2 border">Keluhan</th>
+                        <th class="p-2 border">Catatan</th>
+                        <th class="p-2 border">Dokter</th>
+                        <th class="p-2 border">Poli</th>
+                        <th class="p-2 border">Biaya</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($riwayat as $item)
+                        <tr class="border-t">
+                            <td class="p-2 border">{{ \Carbon\Carbon::parse($item->tgl_periksa)->format('d/m/Y H:i') }}</td>
+                            <td class="p-2 border">{{ $item->keluhan }}</td>
+                            <td class="p-2 border">{{ $item->catatan }}</td>
+                            <td class="p-2 border">{{ $item->nama_dokter }}</td>
+                            <td class="p-2 border">{{ $item->nama_poli }}</td>
+                            <td class="p-2 border">Rp{{ number_format($item->biaya_periksa, 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                </tbody>
+            </table>
+            @endif           
     </div>
-
-    {{-- Riwayat Pemeriksaan --}}
-    <div class="bg-white shadow-md rounded-lg">
-        <div class="px-6 py-4 border-b">
-            <h5 class="text-lg font-semibold">Riwayat Pemeriksaan</h5>
-        </div>
-        <div class="p-6">
-            @if ($pemeriksaans->isEmpty())
-                <p class="text-gray-500">Belum ada riwayat pemeriksaan.</p>
-            @else
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="text-left px-4 py-2 text-sm font-medium text-gray-700">Tanggal</th>
-                                <th class="text-left px-4 py-2 text-sm font-medium text-gray-700">Dokter</th>
-                                <th class="text-left px-4 py-2 text-sm font-medium text-gray-700">Catatan</th>
-                                <th class="text-left px-4 py-2 text-sm font-medium text-gray-700">Biaya</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @foreach ($pemeriksaans as $periksa)
-                                <tr>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d-m-Y') }}</td>
-                                    <td class="px-4 py-2">{{ $periksa->dokter->nama ?? 'Tidak Diketahui' }}</td>
-                                    <td class="px-4 py-2">{{ $periksa->catatan }}</td>
-                                    <td class="px-4 py-2">Rp{{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
-        </div>
-    </div>
+            <div class="mt-6">
+                <a href="{{ route('logout') }}" 
+                class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded">
+                Logout
+                </a>
+            </div>
 </div>
+
 @endsection
